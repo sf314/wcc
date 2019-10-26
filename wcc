@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# WCC: The Word Compiler Collection
+# Compile Word documents as C code 
+
+## Flag Vars
+OUTFILE="a.out"
+COMPILE_ONLY=""
+WARN_NAMES="" # list of warning names, i.e. "all error"
+
+while getopts W:co:h o
+do
+    case "$o" in
+    W)  echo "Found option $OPTARG"
+        WARN_NAMES+="$OPTARG ";;
+    c) COMPILE_ONLY="-c";;
+    o) OUTFILE="$OPTARG";;
+    h) printf >&2 "
+WCC: The Word Compiler Collection
+Usage: wcc [options] FILE
+";;
+    [?]) printf >&2 "Unknown flag $OPTARG";;
+    esac
+done
+shift $(($OPTIND-1))
+
+
+## Functions
+get_warnings_for_warn_names() {
+    local WARN_NAMES=$@
+    local result=""
+    # iteration requires `setopt shwordsplit` for ZSH
+    for name in $WARN_NAMES
+    do
+        result+="-W$name "
+    done 
+    echo $result
+}
+
+
+## Vars
+INFILE="$@"
+BASENAME="$(basename $INFILE)"
+WARNINGS="$(get_warnings_for_warn_names $WARN_NAMES)"
+
+echo "warn names: $WARN_NAMES"
+echo "warnings: $WARNINGS"
+echo "infile: $INFILE"
+echo "basename: $BASENAME"
+echo "outfile: $OUTFILE"
+
+
+
+### Extract code from Word XML
+unzip -p "$INFILE" word/document.xml | \
+    sed -e 's/<\/w:p>/你/g; s/<w:br\/>/你/g; s/<\/w:pPr>/你/g; s/<w:tab\/>/空/g; s/<[^>]\{1,\}>//g; s/[^[:print:]\n]\{1,\}//g; s/&lt;/</g; s/&gt;/>/g; ' | \
+    sed -e 's/“/"/g; s/”/"/g' | \
+    tr '你' '\n' | \
+    tr '空' '\t' > "temp.$BASENAME.c"
+
+
+### Compile code 
+gcc $WARNINGS "$COMPILE_ONLY" "temp.$BASENAME.c" -o "$OUTFILE"
