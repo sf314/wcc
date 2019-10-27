@@ -1,0 +1,9 @@
+
+# Ignore temporary files
+temp*
+
+# Ignore MS Word buffers
+test/~*
+
+# Ignore default executables
+a.out
