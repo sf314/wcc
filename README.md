@@ -26,3 +26,27 @@ soon!
 
 `-h`: Show help menu
 
+## Examples
+
+Here are some examples of how you can use WCC to revolutionize your development!
+
+Compile a simple file into `a.out`:
+```sh
+wcc myProgram.docx
+```
+
+Generate object file and specify the output name
+```sh
+wcc -c -o output.o myProgram.docx
+```
+
+Be very strict with your warnings (recommended)
+```sh
+wcc -Wall -Werror myProgram.docx
+```
+
+When you don't know what to do
+```sh
+wcc -h
+# Or, perhaps more whistfully, `gcc -h`
+```
