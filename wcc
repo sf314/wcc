@@ -8,6 +8,7 @@ OUTFILE="a.out"
 COMPILE_ONLY=""
 WARN_NAMES="" # list of warning names, i.e. "all error"
 
+
 while getopts W:co:h o
 do
     case "$o" in
@@ -42,13 +43,6 @@ get_warnings_for_warn_names() {
 INFILE="$@"
 BASENAME="$(basename $INFILE)"
 WARNINGS="$(get_warnings_for_warn_names $WARN_NAMES)"
-
-echo "warn names: $WARN_NAMES"
-echo "warnings: $WARNINGS"
-echo "infile: $INFILE"
-echo "basename: $BASENAME"
-echo "outfile: $OUTFILE"
-
 
 
 ### Extract code from Word XML
