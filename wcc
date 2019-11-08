@@ -7,20 +7,26 @@
 OUTFILE="a.out"
 COMPILE_ONLY=""
 WARN_NAMES="" # list of warning names, i.e. "all error"
+STD_C="" # C standard to use, i.e. c99
 
-
-while getopts W:co:h o
+while getopts W:co:s:h o
 do
     case "$o" in
     W)  echo "Found option $OPTARG"
         WARN_NAMES+="$OPTARG ";;
     c) COMPILE_ONLY="-c";;
     o) OUTFILE="$OPTARG";;
+    s) STD_C="-s$OPTARG";;
     h) printf >&2 "
 WCC: The Word Compiler Collection
 Usage: wcc [options] FILE
-";;
-    [?]) printf >&2 "Unknown flag $OPTARG";;
+-W warn     Set warnings, i.e. all, error
+-c          Compile, but do not link
+-o out      Specify output file name
+-std=std    Set C standard to use, i.e. c99
+-h          Show this help
+" && exit 0;;
+    [?]) printf >&2 "Unknown flag $OPTARG" && exit 0;;
     esac
 done
 shift $(($OPTIND-1))
